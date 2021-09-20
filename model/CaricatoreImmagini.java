@@ -1,13 +1,12 @@
-/** *****************************************************
- * Copyright (C) 2021 {Giuseppe Malafronte}
- * <giuseppe.malafronte2@studenti.unina.it>
- *
- * This file is part of {FirstGame}.
- *
- * {FirstGame} can not be copied and/or distributed without the express
- * permission of {Giuseppe Malafronte}
- ******************************************************
- */
+/*******************************************************
+ * Copyright (C) 2021 -Giuseppe Malafronte- <email: giuseppe.malafronte2@studenti.unina.it>
+ * 
+ * This file is part of {Protect Your Friend Game Project}.
+ * 
+ * Protect Your Friend Game can not be copied and/or distributed without the express
+ * permission of -Giuseppe Malafronte-
+ *******************************************************/
+
 package model;
 
 import java.awt.image.*;
