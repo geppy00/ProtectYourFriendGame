@@ -51,6 +51,7 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
         game.addMouseMotionListener(game);
         finestraGame.pack();
         finestraGame.setVisible(true);
+        finestraGame.setLocationRelativeTo(null);
         
         //Creazione del thread del gioco invocando il metodo astratto run
         Thread threadGioco = new Thread(game);
@@ -60,10 +61,10 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
     
     //Metodi
     private void iniziaGioco() {
-        this.oggettoProtagonista = new Protagonista(this.protagonista, 100, 200, 100, 480);
+        this.oggettoProtagonista = new Protagonista(this.protagonista, 100, 250, 150, 430);
         this.oggettoProtagonista.start(); //essendo un thread possiamo farlo partire direttamente
         
-        this.oggettoGiocatore = new Giocatore(this.scudo, 0, 150, 150);
+        this.oggettoGiocatore = new Giocatore(this.scudo, 0, 100, 100);
     }
     
     private void caricaRisorse() {
