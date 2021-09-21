@@ -41,17 +41,17 @@ public class Protagonista extends Thread {
     
     //Metodi
     private void aggiorna() {
-        this.x++; //cambia la posizione della protagonista
+        this.setX(this.getX() + 1); //cambia la posizione della protagonista
     }
     
     public void disegna(Graphics graphics) { 
-        graphics.drawImage(this.imgProtagonista, this.x, this.y, this.larghezza, this.altezza, null); //disegnamo la protagonista a schermo
+        graphics.drawImage(this.imgProtagonista, this.getX(), this.getY(), this.getLarghezza(), this.getAltezza(), null); //disegnamo la protagonista a schermo
     }
     
     @Override
     public void run() { //gestione del thread per la protagonista
-        attivo = true;
-        while(attivo) {
+        setAttivo(true);
+        while(isAttivo()) {
             this.aggiorna();
             
             try {
@@ -60,5 +60,46 @@ public class Protagonista extends Thread {
                 Logger.getLogger(Protagonista.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    //Getter And Setters
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getLarghezza() {
+        return larghezza;
+    }
+
+    public void setLarghezza(int larghezza) {
+        this.larghezza = larghezza;
+    }
+
+    public int getAltezza() {
+        return altezza;
+    }
+
+    public void setAltezza(int altezza) {
+        this.altezza = altezza;
+    }
+
+    public boolean isAttivo() {
+        return attivo;
+    }
+
+    public void setAttivo(boolean attivo) {
+        this.attivo = attivo;
     }
 }

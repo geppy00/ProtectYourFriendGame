@@ -25,6 +25,7 @@ public class Game extends Canvas implements KeyListener, Runnable {
     BufferedImage scudo = null;
     private boolean giocoAttivo = false;
     private Protagonista oggettoProtagonista;
+    private Giocatore oggettoGiocatore;
     
 
     //Costruttori
@@ -58,7 +59,9 @@ public class Game extends Canvas implements KeyListener, Runnable {
     //Metodi
     private void iniziaGioco() {
         this.oggettoProtagonista = new Protagonista(this.protagonista, 100, 200, 100, 480);
-        this.oggettoProtagonista.start(); //essendo un thread possiamo farlo partire direttamente 
+        this.oggettoProtagonista.start(); //essendo un thread possiamo farlo partire direttamente
+        
+        this.oggettoGiocatore = new Giocatore(this.scudo, 0, 150, 150);
     }
     
     private void caricaRisorse() {
@@ -85,6 +88,7 @@ public class Game extends Canvas implements KeyListener, Runnable {
         
         graphics.drawImage(this.sfondo, 0, 0, this.larghezza, this.altezza, this);
         this.oggettoProtagonista.disegna(graphics);
+        this.oggettoGiocatore.disegna(graphics);
         
         graphics.dispose();
         bufferStrategy.show(); //Rende visibile il successivo buffer disponibile copiando la memoria (blitting) o modificando il puntatore del display (capovolgendo).
