@@ -14,7 +14,7 @@ import java.awt.event.*;
 import java.awt.image.*;
 import javax.swing.*;
 
-public class Game extends Canvas implements KeyListener, Runnable {
+public class Game extends Canvas implements KeyListener, Runnable, MouseMotionListener {
     
     //Attributi per la finestra di gioco e delle componenti 
     private static final int larghezza = 1280;
@@ -47,6 +47,8 @@ public class Game extends Canvas implements KeyListener, Runnable {
         finestraGame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         finestraGame.add(game); //diciamo al gioco che deve disegnarci sopra facendo visualizzare le immagini
         finestraGame.addKeyListener(game); //diciamo di ascoltare il listener per verificare se l'utente ha premuto un tasto
+        /*finestraGame.addMouseMotionListener(game);*/ //se aggiungiamo il MouseMotionListener direttamente al JFrame non viene riconosciuto, cioè solo la prima volta poi basta, quindi la soluzione è aggiungerlo direttamente all'oggetto Game
+        game.addMouseMotionListener(game);
         finestraGame.pack();
         finestraGame.setVisible(true);
         
@@ -67,7 +69,7 @@ public class Game extends Canvas implements KeyListener, Runnable {
     private void caricaRisorse() {
         CaricatoreImmagini caricatoreImmagini = new CaricatoreImmagini();
         
-        this.sfondo = caricatoreImmagini.caricaImmagine("/immagini/sfondo.png");
+        this.sfondo = caricatoreImmagini.caricaImmagine("/immagini/sfondo.jpg");
         this.protagonista = caricatoreImmagini.caricaImmagine("/immagini/chararcter.png");
         this.scudo = caricatoreImmagini.caricaImmagine("/immagini/shield.png");
         
@@ -101,7 +103,17 @@ public class Game extends Canvas implements KeyListener, Runnable {
 
     @Override
     public void keyPressed(KeyEvent e) {
+       int keyCode = e.getKeyCode(); //Codice del tasto premuto
        
+       switch(keyCode) {
+           case KeyEvent.VK_LEFT:
+                this.oggettoGiocatore.spostaSinistra();
+            break;
+            
+           case KeyEvent.VK_RIGHT:
+               this.oggettoGiocatore.spostaDestra();
+            break;
+       }
     }
 
     @Override
@@ -117,10 +129,23 @@ public class Game extends Canvas implements KeyListener, Runnable {
             this.disegna();
         }
     }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+       
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        int posizione = (e.getPoint().x)-(this.oggettoGiocatore.getLarghezza()/2); //andiamo a trovare il punto dove si trova il mouse però lo scudo ha una certa larghezza quindi per farlo comparire esattamente nel punto indicato dobbiamo sottrarre la meta della sua larghezza
+        this.oggettoGiocatore.setX(posizione);
+    }
     
 }
 
 /*
 TEORIE=>
     BufferStrategy: The main reason for using a BufferStrategy is because you want to take control of the painting process (active painting) away from Swing's painting algorithm (which is passive)
+    MouseMotionListener: Ho usato questo tipo di dato astratto perchè rispetto a MouseListener esso ci vede la posizione in tempo reale del mouse e ce lo monitora (controlla) soltanto all'interno del frame (il nostro JFrame) quindi in pratica, monitorandolo costantemente, non appena il giocatore clicca sul frame andremo a prendere questo punto dove il mouse si trova ed assegnarlo al giocatore 
+                         Da Oracle = "Possiamo implementare un'interfaccia MouseListener quando il mouse è stabile durante la gestione dell'evento del mouse mentre possiamo implementare un'interfaccia MouseMotionListener  quando il mouse è in movimento durante la gestione dell'evento del mouse."
 */

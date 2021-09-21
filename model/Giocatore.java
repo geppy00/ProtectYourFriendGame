@@ -22,6 +22,7 @@ public class Giocatore {
     private int larghezza;
     private int altezza;
     BufferedImage imgScudo;
+    private final int velocita = 10;
     
     //Costruttori
     public Giocatore() {
@@ -38,11 +39,11 @@ public class Giocatore {
     
     //Metodi
     public void spostaDestra() {
-        //si muove verso destra
+        this.x += this.velocita;
     }
     
     public void spostaSinistra() {
-        //si muove verso sinistra
+        this.x -= this.velocita;
     }
     
     public void disegna(Graphics graphics) {
