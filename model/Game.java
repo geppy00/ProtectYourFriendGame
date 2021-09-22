@@ -9,10 +9,12 @@
 
 package model;
 
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import javax.swing.*;
+import controller.*;
 
 public class Game extends Canvas implements KeyListener, Runnable, MouseMotionListener {
     
@@ -124,10 +126,12 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
 
     @Override
     public void run() {
+        FpsController fpsController = new FpsController(60);
         this.giocoAttivo = true;
         
         while(giocoAttivo) {
-            this.disegna();
+            if(fpsController.checkDelta())
+                this.disegna();
         }
     }
 
