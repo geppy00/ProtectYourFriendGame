@@ -40,7 +40,7 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
     public static void main(String[] args) {
         Game game = new Game();
         JFrame finestraGame = new JFrame(nomeGioco);
-        Dimension dimensioneFinestra = new Dimension(larghezza, altezza);
+        Dimension dimensioneFinestra = new Dimension(getLarghezza(), getAltezza());
         
         //Creazione della finestra di gioco
         finestraGame.setPreferredSize(dimensioneFinestra);
@@ -66,7 +66,7 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
         this.oggettoProtagonista = new Protagonista(this.protagonista, 100, 250, 150, 430);
         this.oggettoProtagonista.start(); //essendo un thread possiamo farlo partire direttamente
         
-        this.oggettoGiocatore = new Giocatore(this.scudo, 0, 100, 100);
+        this.oggettoGiocatore = new Giocatore(this.scudo, 0, 100, 100, this);
     }
     
     private void caricaRisorse() {
@@ -91,7 +91,7 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
         
         Graphics graphics = bufferStrategy.getDrawGraphics(); //fa la stessa cosa di prima solo che questa volta abbiamo più buffer
         
-        graphics.drawImage(this.sfondo, 0, 0, this.larghezza, this.altezza, this);
+        graphics.drawImage(this.sfondo, 0, 0, this.getLarghezza(), this.getAltezza(), this);
         this.oggettoProtagonista.disegna(graphics);
         this.oggettoGiocatore.disegna(graphics);
         
@@ -142,8 +142,20 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        int posizione = (e.getPoint().x)-(this.oggettoGiocatore.getLarghezza()/2); //andiamo a trovare il punto dove si trova il mouse però lo scudo ha una certa larghezza quindi per farlo comparire esattamente nel punto indicato dobbiamo sottrarre la meta della sua larghezza
-        this.oggettoGiocatore.setX(posizione);
+        int posizione = (e.getPoint().x)-(this.oggettoGiocatore.getLarghezza() / 2); //andiamo a trovare il punto dove si trova il mouse però lo scudo ha una certa larghezza quindi per farlo comparire esattamente nel punto indicato dobbiamo sottrarre la meta della sua larghezza
+        
+        if(posizione >= 0 && (posizione + this.oggettoGiocatore.getLarghezza()) <= this.larghezza)
+            this.oggettoGiocatore.setX(posizione);
+    }
+    
+    
+    //Getter and Setters
+    public static int getLarghezza() {
+        return larghezza;
+    }
+
+    public static int getAltezza() {
+        return altezza;
     }
     
 }

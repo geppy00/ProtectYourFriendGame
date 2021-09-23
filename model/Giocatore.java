@@ -23,31 +23,35 @@ public class Giocatore {
     private int altezza;
     BufferedImage imgScudo;
     private final int velocita = 10;
+    Game game;
     
     //Costruttori
     public Giocatore() {
         
     }
     
-    public Giocatore(BufferedImage imgScudo, int x, int larghezza, int altezza) {
+    public Giocatore(BufferedImage imgScudo, int x, int larghezza, int altezza, Game game) {
         this.imgScudo = imgScudo;
         this.x = x;
         this.larghezza = larghezza;
         this.altezza = altezza;
         this.y = 325;
+        this.game = game;
     }
     
     //Metodi
     public void spostaDestra() {
-        this.x += this.velocita;
+        if((this.x + this.larghezza) < this.game.getLarghezza()) //effettuiamo un controllo se l'immagine esca fuori dai bordi della finestra per destra dobbiamo controllare se la posizione è minore della larghezza della finestra però bisogna sommare la larghezza dell'oggetto giocatore se no uscira fuori
+            this.x += this.velocita;
     }
     
     public void spostaSinistra() {
-        this.x -= this.velocita;
+        if(this.x > 0)  //effettuiamo un controllo se l'immagine esca fuori dai bordi della finestra per sinistra basta che l'asse delle x sia maggiore di 0 
+            this.x -= this.velocita;
     }
     
     public void disegna(Graphics graphics) {
-        graphics.drawImage(this.imgScudo, this.x, this.y, this.larghezza, this.altezza, null);
+        graphics.drawImage(this.imgScudo, this.x, this.y, this.getLarghezza(), this.getAltezza(), null);
     }
     
     //Getter And Setters

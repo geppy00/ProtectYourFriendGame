@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.image.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import controller.*;
 
 
 public class Protagonista extends Thread {
@@ -51,6 +52,7 @@ public class Protagonista extends Thread {
     @Override
     public void run() { //gestione del thread per la protagonista
         setAttivo(true);
+        
         while(isAttivo()) {
             this.aggiorna();
             
