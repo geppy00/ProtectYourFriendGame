@@ -40,7 +40,7 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
     public static void main(String[] args) {
         Game game = new Game();
         JFrame finestraGame = new JFrame(nomeGioco);
-        Dimension dimensioneFinestra = new Dimension(getLarghezza(), getAltezza());
+        Dimension dimensioneFinestra = new Dimension(larghezza, altezza);
         
         //Creazione della finestra di gioco
         finestraGame.setPreferredSize(dimensioneFinestra);
@@ -63,7 +63,7 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
     
     //Metodi
     private void iniziaGioco() {
-        this.oggettoProtagonista = new Protagonista(this.protagonista, 100, 250, 150, 430);
+        this.oggettoProtagonista = new Protagonista(this.protagonista, 100, 250, 150, 430, this);
         this.oggettoProtagonista.start(); //essendo un thread possiamo farlo partire direttamente
         
         this.oggettoGiocatore = new Giocatore(this.scudo, 0, 100, 100, this);
@@ -144,17 +144,17 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
     public void mouseMoved(MouseEvent e) {
         int posizione = (e.getPoint().x)-(this.oggettoGiocatore.getLarghezza() / 2); //andiamo a trovare il punto dove si trova il mouse però lo scudo ha una certa larghezza quindi per farlo comparire esattamente nel punto indicato dobbiamo sottrarre la meta della sua larghezza
         
-        if(posizione >= 0 && (posizione + this.oggettoGiocatore.getLarghezza()) <= this.larghezza)
+        if(posizione >= 0 && (posizione + this.oggettoGiocatore.getLarghezza()) <= this.larghezza) //effettuiamo un controllo se il cursore esca fuori dai bordi della finestra per sinistra basta che l'asse delle x sia maggiore di 0 per quanto riguarda a destra dobbiamo controllare se la posizione è minore della larghezza della finestra però bisogna sommare la larghezza dell'oggetto giocatore se no uscira fuori
             this.oggettoGiocatore.setX(posizione);
     }
     
     
     //Getter and Setters
-    public static int getLarghezza() {
+    public int getLarghezza() {
         return larghezza;
     }
 
-    public static int getAltezza() {
+    public int getAltezza() {
         return altezza;
     }
     

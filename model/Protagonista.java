@@ -11,9 +11,9 @@ package model;
 
 import java.awt.*;
 import java.awt.image.*;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import controller.*;
 
 
 public class Protagonista extends Thread {
@@ -25,24 +25,39 @@ public class Protagonista extends Thread {
     private int altezza;
     private boolean attivo;
     BufferedImage imgProtagonista;
+    private int velocitaProtagonista = 2; //velocità deve avere un valore perchè altrimenti non essendo niente non riuscirà a muoversi
+    Game game;
+    private final int maxVelocita = 9;
     
     //Costruttori
     public Protagonista() {
         
     }
     
-    public Protagonista(BufferedImage image, int larghezza, int altezza, int x, int y) { 
+    public Protagonista(BufferedImage image, int larghezza, int altezza, int x, int y, Game game) { 
         this.x = x;
         this.y = y;
         this.larghezza = larghezza;
         this.altezza = altezza;
         this.imgProtagonista = image;
         attivo = true;
+        this.game = game;
     }
     
     //Metodi
     private void aggiorna() {
-        this.setX(this.getX() + 1); //cambia la posizione della protagonista
+        /*this.setX(this.getX() + 1);*/ //cambia la posizione della protagonista
+        Random random = new Random();
+        
+        if(this.x <= 0) //in questo if non bisogna negare la velocità perchè altrimenti il personaggio esce fuori dai bordi 
+            this.velocitaProtagonista = random.nextInt(this.maxVelocita) + 1;
+        
+        else if(this.x >= (this.game.getLarghezza() - this.larghezza)) {
+            this.velocitaProtagonista = random.nextInt(this.maxVelocita) + 1;
+            this.velocitaProtagonista *= -1;
+        }
+        
+        this.x += this.velocitaProtagonista;
     }
     
     public void disegna(Graphics graphics) { 
