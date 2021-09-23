@@ -23,7 +23,7 @@ public class Giocatore {
     private int altezza;
     BufferedImage imgScudo;
     private final int velocita = 10;
-    Game game;
+    private Game game;
     
     //Costruttori
     public Giocatore() {

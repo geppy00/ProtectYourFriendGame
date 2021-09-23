@@ -25,8 +25,8 @@ public class Protagonista extends Thread {
     private int altezza;
     private boolean attivo;
     BufferedImage imgProtagonista;
-    private int velocitaProtagonista = 2; //velocità deve avere un valore perchè altrimenti non essendo niente non riuscirà a muoversi
-    Game game;
+    private int velocitaProtagonista = 4; //velocità deve avere un valore perchè altrimenti non essendo niente non riuscirà a muoversi
+    private Game game;
     private final int maxVelocita = 9;
     
     //Costruttori
@@ -61,7 +61,7 @@ public class Protagonista extends Thread {
     }
     
     public void disegna(Graphics graphics) { 
-        graphics.drawImage(this.imgProtagonista, this.getX(), this.getY(), this.getLarghezza(), this.getAltezza(), null); //disegnamo la protagonista a schermo
+        graphics.drawImage(this.imgProtagonista, this.getX(), this.getY(), this.getLarghezza(), this.getAltezza(), this.game); //disegnamo la protagonista a schermo
     }
     
     @Override
