@@ -49,7 +49,7 @@ public class PioggiaProiettili extends Thread {
         
         while(piove) {
             for(int i = 0; i < this.quantita; i++) {
-                this.pioggia.add(new Proiettile(this.imgProiettile, 20, 50, random.nextInt(this.game.getLarghezza()), -50, random.nextInt(this.maxVerlocita) + 2, game));
+                this.getPioggia().add(new Proiettile(this.imgProiettile, 20, 50, random.nextInt(this.game.getLarghezza()), -50, random.nextInt(this.maxVerlocita) + 2, game));
             }
             
             try {
@@ -61,9 +61,18 @@ public class PioggiaProiettili extends Thread {
     }
     
     public void disegna(Graphics graphics) {
-        for(int i = 0; i < this.pioggia.size(); i++) {
-            Proiettile tmpProiettile = pioggia.get(i);
+        for(int i = 0; i < this.getPioggia().size(); i++) {
+            Proiettile tmpProiettile = getPioggia().get(i);
             tmpProiettile.disegna(graphics);
         }
+    }
+    
+    //Getters and Setters
+    public ArrayList<Proiettile> getPioggia() {
+        return pioggia;
+    }
+
+    public void setPioggia(ArrayList<Proiettile> pioggia) {
+        this.pioggia = pioggia;
     }
 }

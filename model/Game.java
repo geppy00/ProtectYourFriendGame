@@ -15,6 +15,7 @@ import java.awt.event.*;
 import java.awt.image.*;
 import javax.swing.*;
 import controller.*;
+import java.util.*;
 
 public class Game extends Canvas implements KeyListener, Runnable, MouseMotionListener {
     
@@ -131,6 +132,17 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
     public void keyReleased(KeyEvent e) {
         
     }
+    
+    private void aggiorna() {
+        ArrayList<Proiettile> pioggia = this.pioggiaProiettili.getPioggia();
+        
+        for(Proiettile p: pioggia) {
+            if(GestoreCollisioni.controllaCollisione(oggettoGiocatore, p)) {
+                pioggia.remove(p); //se la collisione avviene rimuviamo l'oggetto proiettile dall'arraylist di consegunza anche nello schermo
+                break; //questo break è importante in quanto un oggetto viene modificato contemporaneamente da un thread diverso quindi per evitare l'ecccezione si fa un salto per poi ricontrollarlo al prossimo aggiornamento
+            }
+        }
+    }
 
     @Override
     public void run() {
@@ -138,8 +150,10 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
         this.giocoAttivo = true;
         
         while(giocoAttivo) {
-            if(fpsController.checkDelta())
+            if(fpsController.checkDelta()) {
+                this.aggiorna(); //controlla le collisioni
                 this.disegna();
+            }
         }
     }
 
