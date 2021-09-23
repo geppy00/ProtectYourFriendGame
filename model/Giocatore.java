@@ -54,6 +54,10 @@ public class Giocatore {
         graphics.drawImage(this.imgScudo, this.x, this.y, this.getLarghezza(), this.getAltezza(), null);
     }
     
+    public Rectangle getBordi() {
+        return new Rectangle(this.x, this.y, this.larghezza, this.altezza);
+    }
+    
     //Getter And Setters
     public int getX() {
         return x;

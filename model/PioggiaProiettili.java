@@ -10,22 +10,23 @@
  */
 package model;
 
+import java.awt.*;
 import java.awt.image.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class PioggiaProiettili extends Thread{
+public class PioggiaProiettili extends Thread {
     
     //Attributi per rappresentare la pioggia di proiettili
     private int quantita;
     private int attesa; //valore per aspettare la prossima linea di proiettili
-    BufferedImage impProiettile;
+    BufferedImage imgProiettile;
     private Game game;
     private boolean piove;
     private ArrayList<Proiettile> pioggia;
     private Random random;
-    private final int maxVerlocita = 5;
+    private final int maxVerlocita = 15;
     
     //Costruttori
     public PioggiaProiettili() {
@@ -33,7 +34,7 @@ public class PioggiaProiettili extends Thread{
     }
     
     public PioggiaProiettili(BufferedImage impProiettile, int quantita, int attesa, Game game) {
-        this.impProiettile = impProiettile;
+        this.imgProiettile = impProiettile;
         this.quantita = quantita;
         this.attesa = attesa;
         this.game = game;
@@ -47,14 +48,22 @@ public class PioggiaProiettili extends Thread{
         this.piove = true;
         
         while(piove) {
-            for(int i = 0; i < this.quantita; i++)
-                this.pioggia.add(new Proiettile(this.impProiettile, 20, 50, random.nextInt(this.game.getLarghezza()), -50, random.nextInt(this.maxVerlocita) + 2, game));
+            for(int i = 0; i < this.quantita; i++) {
+                this.pioggia.add(new Proiettile(this.imgProiettile, 20, 50, random.nextInt(this.game.getLarghezza()), -50, random.nextInt(this.maxVerlocita) + 2, game));
+            }
             
             try {
                 Thread.sleep(attesa);
             } catch (InterruptedException ex) {
                 Logger.getLogger(PioggiaProiettili.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+    }
+    
+    public void disegna(Graphics graphics) {
+        for(int i = 0; i < this.pioggia.size(); i++) {
+            Proiettile tmpProiettile = pioggia.get(i);
+            tmpProiettile.disegna(graphics);
         }
     }
 }

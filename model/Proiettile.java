@@ -16,7 +16,7 @@ import java.util.logging.*;
 
 
 public class Proiettile extends Thread {
-    
+
     //Attributi per rappresentare il proiettile
     private int x;
     private int y;
@@ -27,6 +27,7 @@ public class Proiettile extends Thread {
     private Game game;
     private int velocitaProiettile;
     
+    
     //Costruttori
     public Proiettile() {
         
@@ -35,6 +36,7 @@ public class Proiettile extends Thread {
     public Proiettile(BufferedImage imgProiettile, int larghezza, int altezza, int x, int y, int velocitaProiettile, Game game) {
         this.x = x;
         this.y = y;
+        this.velocitaProiettile = velocitaProiettile;
         this.larghezza = larghezza;
         this.altezza = altezza;
         this.imgProiettile = imgProiettile;
@@ -43,9 +45,10 @@ public class Proiettile extends Thread {
         this.start();
     }
     
+    
     //Metodi
     private void aggiorna() {
-        this.y += this.velocitaProiettile;
+        this.setY(this.getY() + this.velocitaProiettile);
     }
     
     @Override
@@ -56,7 +59,7 @@ public class Proiettile extends Thread {
             this.aggiorna();
             
             try {
-                Thread.sleep(200);
+                Thread.sleep(100);
             } catch(InterruptedException ex) {
                 Logger.getLogger(Protagonista.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -65,9 +68,46 @@ public class Proiettile extends Thread {
     }
     
     public void disegna(Graphics graphics) {
-        graphics.drawImage(this.imgProiettile, this.x, this.y, this.larghezza, this.altezza, this.game);
+        graphics.drawImage(this.imgProiettile, this.getX(), this.getY(), this.getLarghezza(), this.getAltezza(), this.game);
     }
     
+    public Rectangle getBordi() {
+        return new Rectangle(this.x, this.y, this.larghezza, this.altezza); //A Rectangle specifies an area in a coordinate space that is enclosed by the Rectangle object's upper-left point (x,y) in the coordinate space, its width, and its height.
+    }
+    
+    
+    //Getters and Setters
+     public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getLarghezza() {
+        return larghezza;
+    }
+
+    public void setLarghezza(int larghezza) {
+        this.larghezza = larghezza;
+    }
+
+    public int getAltezza() {
+        return altezza;
+    }
+
+    public void setAltezza(int altezza) {
+        this.altezza = altezza;
+    }
     
     
 }
