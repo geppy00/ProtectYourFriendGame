@@ -15,8 +15,8 @@ import model.*;
 public class GestoreCollisioni {
     
     //Metodi per gestire le collissioni tra gli oggetti
-    public static boolean controllaCollisione(Giocatore giocatore, Proiettile proiettile) {
-        if(giocatore.getBordi().intersects(proiettile.getBordi())) { //Si ha una collisione tra lo scudo e il proiettile
+    public static boolean controllaCollisione(Giocatore giocatore, Bomba bomba) {
+        if(giocatore.getBordi().intersects(bomba.getBordi())) { //Si ha una collisione tra lo scudo e il proiettile
             return true;
         }
         

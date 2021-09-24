@@ -30,8 +30,7 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
     private boolean giocoAttivo = false;
     private Protagonista oggettoProtagonista;
     private Giocatore oggettoGiocatore;
-    private PioggiaProiettili pioggiaProiettili;
-    private Proiettile oggettoproiettile;
+    private PioggiaBombe pioggiaBombe;
     
 
     //Costruttori
@@ -70,8 +69,8 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
         this.oggettoProtagonista = new Protagonista(this.protagonista, 100, 250, 150, 430, this);
         this.oggettoProtagonista.start(); //essendo un thread possiamo farlo partire direttamente
         
-        this.pioggiaProiettili = new PioggiaProiettili(this.proiettile, 4, 500, this);
-        this.pioggiaProiettili.start();
+        this.pioggiaBombe = new PioggiaBombe(this.proiettile, 2, 500, this);
+        this.pioggiaBombe.start();
         
         this.oggettoGiocatore = new Giocatore(this.scudo, 0, 100, 100, this);
     }
@@ -82,7 +81,7 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
         this.sfondo = caricatoreImmagini.caricaImmagine("/immagini/sfondo.jpg");
         this.protagonista = caricatoreImmagini.caricaImmagine("/immagini/chararcter.png");
         this.scudo = caricatoreImmagini.caricaImmagine("/immagini/shield.png");
-        this.proiettile = caricatoreImmagini.caricaImmagine("/immagini/bullet.png");
+        this.proiettile = caricatoreImmagini.caricaImmagine("/immagini/bomb.png");
         
         System.out.print("Risorse caricate correttamente\n\n");
     }
@@ -102,7 +101,7 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
         graphics.drawImage(this.sfondo, 0, 0, this.getLarghezza(), this.getAltezza(), this);
         this.oggettoProtagonista.disegna(graphics);
         this.oggettoGiocatore.disegna(graphics);
-        this.pioggiaProiettili.disegna(graphics);
+        this.pioggiaBombe.disegna(graphics);
         
         graphics.dispose();
         bufferStrategy.show(); //Rende visibile il successivo buffer disponibile copiando la memoria (blitting) o modificando il puntatore del display (capovolgendo).
@@ -134,9 +133,9 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
     }
     
     private void aggiorna() {
-        ArrayList<Proiettile> pioggia = this.pioggiaProiettili.getPioggia();
+        ArrayList<Bomba> pioggia = this.pioggiaBombe.getPioggia();
         
-        for(Proiettile p: pioggia) {
+        for(Bomba p: pioggia) {
             if(GestoreCollisioni.controllaCollisione(oggettoGiocatore, p)) {
                 pioggia.remove(p); //se la collisione avviene rimuviamo l'oggetto proiettile dall'arraylist di consegunza anche nello schermo
                 break; //questo break è importante in quanto un oggetto viene modificato contemporaneamente da un thread diverso quindi per evitare l'ecccezione si fa un salto per poi ricontrollarlo al prossimo aggiornamento
