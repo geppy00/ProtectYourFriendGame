@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class PioggiaBombe extends Thread {
     
     //Attributi per rappresentare la pioggia di proiettili
-    private int quantita;
+    private int quantita = 1;
     private int attesa; //valore per aspettare la prossima linea di proiettili
     BufferedImage imgBomba;
     private Game game;
@@ -33,9 +33,8 @@ public class PioggiaBombe extends Thread {
         
     }
     
-    public PioggiaBombe(BufferedImage imgBomba, int quantita, int attesa, Game game) {
+    public PioggiaBombe(BufferedImage imgBomba, int attesa, Game game) {
         this.imgBomba = imgBomba;
-        this.quantita = quantita;
         this.attesa = attesa;
         this.game = game;
         this.pioggia = new ArrayList();
@@ -48,6 +47,7 @@ public class PioggiaBombe extends Thread {
         this.piove = true;
         
         while(piove) {
+            this.quantita = this.random.nextInt(6);
             for(int i = 0; i < this.quantita; i++) {
                 this.getPioggia().add(new Bomba(this.imgBomba, 80, 80, random.nextInt(this.game.getLarghezza()), -50, random.nextInt(this.maxVerlocita) + 2, game));
             }

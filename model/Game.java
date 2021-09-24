@@ -28,7 +28,7 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
     BufferedImage scudo = null;
     BufferedImage proiettile = null;
     BufferedImage sfondoGameOver = null;
-    private boolean giocoAttivo = false;
+    private static boolean giocoAttivo = false;
     private Protagonista oggettoProtagonista;
     private Giocatore oggettoGiocatore;
     private PioggiaBombe pioggiaBombe;
@@ -45,7 +45,7 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
         Game game = new Game();
         JFrame finestraGame = new JFrame(nomeGioco);
         Dimension dimensioneFinestra = new Dimension(larghezza, altezza);
-        
+
         //Creazione della finestra di gioco
         finestraGame.setPreferredSize(dimensioneFinestra);
         finestraGame.setMaximumSize(dimensioneFinestra);
@@ -58,10 +58,11 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
         finestraGame.pack();
         finestraGame.setVisible(true);
         finestraGame.setLocationRelativeTo(null);
-        
+
         //Creazione del thread del gioco invocando il metodo astratto run
         Thread threadGioco = new Thread(game);
         threadGioco.start();
+        
     }
     
     
@@ -70,7 +71,7 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
         this.oggettoProtagonista = new Protagonista(this.protagonista, 100, 250, 150, 430, this);
         this.oggettoProtagonista.start(); //essendo un thread possiamo farlo partire direttamente
         
-        this.pioggiaBombe = new PioggiaBombe(this.proiettile, 2, 500, this);
+        this.pioggiaBombe = new PioggiaBombe(this.proiettile, 500, this);
         this.pioggiaBombe.start();
         
         this.oggettoGiocatore = new Giocatore(this.scudo, 0, 100, 100, this);
