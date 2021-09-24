@@ -23,4 +23,12 @@ public class GestoreCollisioni {
         return false;
     }
     
+    public static boolean controllaCollisioniProtagonista(Protagonista protagonista, Bomba bomba) {
+        if(protagonista.getBordi().intersects(bomba.getBordi())) {
+            return true;
+        }
+        
+        return false;
+    }
+    
 }

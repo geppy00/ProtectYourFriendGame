@@ -27,6 +27,7 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
     BufferedImage protagonista = null;
     BufferedImage scudo = null;
     BufferedImage proiettile = null;
+    BufferedImage sfondoGameOver = null;
     private boolean giocoAttivo = false;
     private Protagonista oggettoProtagonista;
     private Giocatore oggettoGiocatore;
@@ -82,6 +83,8 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
         this.protagonista = caricatoreImmagini.caricaImmagine("/immagini/chararcter.png");
         this.scudo = caricatoreImmagini.caricaImmagine("/immagini/shield.png");
         this.proiettile = caricatoreImmagini.caricaImmagine("/immagini/bomb.png");
+        this.sfondoGameOver = caricatoreImmagini.caricaImmagine("/immagini/game_over.png");
+        
         
         System.out.print("Risorse caricate correttamente\n\n");
     }
@@ -102,6 +105,15 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
         this.oggettoProtagonista.disegna(graphics);
         this.oggettoGiocatore.disegna(graphics);
         this.pioggiaBombe.disegna(graphics);
+        graphics.setColor(Color.GREEN);
+        graphics.drawString("Vita: "+this.oggettoProtagonista.getVita(), 25, 25);
+        
+        if(!this.giocoAttivo) {
+            graphics.clearRect(0, 0, this.larghezza, this.altezza);
+            graphics.drawImage(this.sfondoGameOver, 0, 0, this.getLarghezza(), this.getAltezza(), this);
+            graphics.setColor(Color.red);
+            graphics.drawString("!! HAI FATTO MORIRE LA TUA AMICA !!", 490, 620);
+        }
         
         graphics.dispose();
         bufferStrategy.show(); //Rende visibile il successivo buffer disponibile copiando la memoria (blitting) o modificando il puntatore del display (capovolgendo).
@@ -132,6 +144,13 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
         
     }
     
+    private boolean controllaSconfitta() {
+        if(this.oggettoProtagonista.getVita() <= 0) 
+            return true;
+        
+        return false;
+    }
+    
     private void aggiorna() {
         ArrayList<Bomba> pioggia = this.pioggiaBombe.getPioggia();
         
@@ -140,7 +159,18 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
                 pioggia.remove(p); //se la collisione avviene rimuviamo l'oggetto proiettile dall'arraylist di consegunza anche nello schermo
                 break; //questo break è importante in quanto un oggetto viene modificato contemporaneamente da un thread diverso quindi per evitare l'ecccezione si fa un salto per poi ricontrollarlo al prossimo aggiornamento
             }
+            if(GestoreCollisioni.controllaCollisioniProtagonista(oggettoProtagonista, p)) {
+                pioggia.remove(p);
+                this.oggettoProtagonista.setVita(oggettoProtagonista.getVita() - 5);
+                break; //questo break è importante perchè togliendo un elemento dall'arraylist la dimensione cambia ma il for questo al momento non lo sa quindi usciamo e lo rifacciamo
+            }
         }
+        
+        if(this.controllaSconfitta()) {
+            this.giocoAttivo = false;
+            this.disegna();
+        }
+            
     }
 
     @Override

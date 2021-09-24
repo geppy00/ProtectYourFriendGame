@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 
 public class Protagonista extends Thread {
-    
+
     //Attributi per la componente protagonista
     private int x;
     private int y;
@@ -28,6 +28,7 @@ public class Protagonista extends Thread {
     private int velocitaProtagonista = 4; //velocità deve avere un valore perchè altrimenti non essendo niente non riuscirà a muoversi
     private Game game;
     private final int maxVelocita = 9;
+    private int vita;
     
     //Costruttori
     public Protagonista() {
@@ -42,6 +43,7 @@ public class Protagonista extends Thread {
         this.imgProtagonista = image;
         attivo = true;
         this.game = game;
+        this.vita = 100;
     }
     
     //Metodi
@@ -77,6 +79,10 @@ public class Protagonista extends Thread {
                 Logger.getLogger(Protagonista.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    public Rectangle getBordi() {
+        return new Rectangle(this.x, this.y, this.larghezza, this.altezza);
     }
     
     //Getter And Setters
@@ -119,4 +125,13 @@ public class Protagonista extends Thread {
     public void setAttivo(boolean attivo) {
         this.attivo = attivo;
     }
+
+    public int getVita() {
+        return vita;
+    }
+
+    public void setVita(int vita) {
+        this.vita = vita;
+    }
+    
 }
