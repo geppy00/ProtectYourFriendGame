@@ -12,6 +12,7 @@ package model;
 
 import java.awt.*;
 import java.awt.image.*;
+import java.util.*;
 
 public class Giocatore {
 
@@ -22,6 +23,7 @@ public class Giocatore {
     private int larghezza;
     private int altezza;
     BufferedImage imgScudo;
+    BufferedImage imgProiettile;
     private final int velocita = 10;
     private Game game;
     
@@ -30,13 +32,15 @@ public class Giocatore {
         
     }
     
-    public Giocatore(BufferedImage imgScudo, int x, int larghezza, int altezza, Game game) {
+    public Giocatore(BufferedImage imgScudo, BufferedImage imgProiettile, int x, int larghezza, int altezza, Game game) {
         this.imgScudo = imgScudo;
         this.x = x;
         this.larghezza = larghezza;
         this.altezza = altezza;
         this.y = 325;
         this.game = game;
+        this.imgProiettile = imgProiettile;
+        Game.munizioniProiettili = new ArrayList();
     }
     
     //Metodi
@@ -56,6 +60,10 @@ public class Giocatore {
     
     public Rectangle getBordi() {
         return new Rectangle(this.x, this.y, this.larghezza, this.altezza);
+    }
+    
+    public void spara() {
+        Game.munizioniProiettili.add(new Proiettile(this.imgProiettile, this.x + this.larghezza / 2, this.y, 20, 40, this.game));
     }
     
     //Getter And Setters

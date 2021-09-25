@@ -17,7 +17,7 @@ import javax.swing.*;
 import controller.*;
 import java.util.*;
 
-public class Game extends Canvas implements KeyListener, Runnable, MouseMotionListener {
+public class Game extends Canvas implements Runnable, MouseMotionListener, MouseListener {
     
     //Attributi per la finestra di gioco e delle componenti 
     private static final int larghezza = 1280;
@@ -26,12 +26,14 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
     BufferedImage sfondo = null;
     BufferedImage protagonista = null;
     BufferedImage scudo = null;
-    BufferedImage proiettile = null;
+    BufferedImage bomba = null;
     BufferedImage sfondoGameOver = null;
+    BufferedImage proiettile = null;
     private static boolean giocoAttivo = false;
     private Protagonista oggettoProtagonista;
     private Giocatore oggettoGiocatore;
     private PioggiaBombe pioggiaBombe;
+    public static ArrayList<Proiettile> munizioniProiettili;
     
 
     //Costruttori
@@ -52,7 +54,8 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
         finestraGame.setResizable(false);
         finestraGame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         finestraGame.add(game); //diciamo al gioco che deve disegnarci sopra facendo visualizzare le immagini
-        finestraGame.addKeyListener(game); //diciamo di ascoltare il listener per verificare se l'utente ha premuto un tasto
+        /*finestraGame.addKeyListener(game);*/ //diciamo di ascoltare il listener per verificare se l'utente ha premuto un tasto
+        game.addMouseListener(game); 
         /*finestraGame.addMouseMotionListener(game);*/ //se aggiungiamo il MouseMotionListener direttamente al JFrame non viene riconosciuto, cioè solo la prima volta poi basta, quindi la soluzione è aggiungerlo direttamente all'oggetto Game
         game.addMouseMotionListener(game);
         finestraGame.pack();
@@ -71,10 +74,10 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
         this.oggettoProtagonista = new Protagonista(this.protagonista, 100, 250, 150, 430, this);
         this.oggettoProtagonista.start(); //essendo un thread possiamo farlo partire direttamente
         
-        this.pioggiaBombe = new PioggiaBombe(this.proiettile, 500, this);
+        this.pioggiaBombe = new PioggiaBombe(this.bomba, 500, this);
         this.pioggiaBombe.start();
         
-        this.oggettoGiocatore = new Giocatore(this.scudo, 0, 100, 100, this);
+        this.oggettoGiocatore = new Giocatore(this.scudo, this.proiettile, 0, 100, 100, this);
     }
     
     private void caricaRisorse() {
@@ -83,8 +86,9 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
         this.sfondo = caricatoreImmagini.caricaImmagine("/immagini/sfondo.jpg");
         this.protagonista = caricatoreImmagini.caricaImmagine("/immagini/chararcter.png");
         this.scudo = caricatoreImmagini.caricaImmagine("/immagini/shield.png");
-        this.proiettile = caricatoreImmagini.caricaImmagine("/immagini/bomb.png");
+        this.bomba = caricatoreImmagini.caricaImmagine("/immagini/bomb.png");
         this.sfondoGameOver = caricatoreImmagini.caricaImmagine("/immagini/game_over.png");
+        this.proiettile = caricatoreImmagini.caricaImmagine("/immagini/bullet.png");
         
         
         System.out.print("Risorse caricate correttamente\n\n");
@@ -110,16 +114,23 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
         graphics.drawString("Vita: "+this.oggettoProtagonista.getVita(), 25, 25);
         
         if(!this.giocoAttivo) {
+            this.munizioniProiettili.clear(); //rimuove tutti i proiettili sullo schermo
             graphics.clearRect(0, 0, this.larghezza, this.altezza);
             graphics.drawImage(this.sfondoGameOver, 0, 0, this.getLarghezza(), this.getAltezza(), this);
             graphics.setColor(Color.red);
             graphics.drawString("!! HAI FATTO MORIRE LA TUA AMICA !!", 490, 620);
         }
         
+        if(this.munizioniProiettili != null) {
+            for(Proiettile p: munizioniProiettili) {
+                p.disegna(graphics);
+            }
+        }
+        
         graphics.dispose();
         bufferStrategy.show(); //Rende visibile il successivo buffer disponibile copiando la memoria (blitting) o modificando il puntatore del display (capovolgendo).
     }
-
+/*
     @Override
     public void keyTyped(KeyEvent e) {
         
@@ -144,7 +155,7 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
     public void keyReleased(KeyEvent e) {
         
     }
-    
+ */
     private boolean controllaSconfitta() {
         if(this.oggettoProtagonista.getVita() <= 0) 
             return true;
@@ -154,17 +165,27 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
     
     private void aggiorna() {
         ArrayList<Bomba> pioggia = this.pioggiaBombe.getPioggia();
+        ArrayList<Proiettile> munizioni = this.munizioniProiettili;
         
-        for(Bomba p: pioggia) {
-            if(GestoreCollisioni.controllaCollisione(oggettoGiocatore, p)) {
-                pioggia.remove(p); //se la collisione avviene rimuviamo l'oggetto proiettile dall'arraylist di consegunza anche nello schermo
+        for(Bomba b: pioggia) {
+            for(Proiettile p: munizioni) {
+                if(GestoreCollisioni.controllaCollissioniProiettile(p, b)) {
+                    munizioni.remove(p);
+                    pioggia.remove(b);
+                    break;
+                }
+            }
+            
+            if(GestoreCollisioni.controllaCollisioneGiocatore(oggettoGiocatore, b)) {
+                pioggia.remove(b); //se la collisione avviene rimuviamo l'oggetto proiettile dall'arraylist di consegunza anche nello schermo
                 break; //questo break è importante in quanto un oggetto viene modificato contemporaneamente da un thread diverso quindi per evitare l'ecccezione si fa un salto per poi ricontrollarlo al prossimo aggiornamento
             }
-            if(GestoreCollisioni.controllaCollisioniProtagonista(oggettoProtagonista, p)) {
-                pioggia.remove(p);
+            if(GestoreCollisioni.controllaCollisioniProtagonista(oggettoProtagonista, b)) {
+                pioggia.remove(b);
                 this.oggettoProtagonista.setVita(oggettoProtagonista.getVita() - 5);
                 break; //questo break è importante perchè togliendo un elemento dall'arraylist la dimensione cambia ma il for questo al momento non lo sa quindi usciamo e lo rifacciamo
             }
+            
         }
         
         if(this.controllaSconfitta()) {
@@ -200,6 +221,31 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
             this.oggettoGiocatore.setX(posizione);
     }
     
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        this.oggettoGiocatore.spara();
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+       
+    }
+    
     
     //Getter and Setters
     public int getLarghezza() {
@@ -209,7 +255,6 @@ public class Game extends Canvas implements KeyListener, Runnable, MouseMotionLi
     public int getAltezza() {
         return altezza;
     }
-    
 }
 
 /*

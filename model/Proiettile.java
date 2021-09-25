@@ -12,72 +12,74 @@ package model;
 
 import java.awt.*;
 import java.awt.image.*;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Proiettile extends Thread {
-
-    //Attributi per rappresentare il proiettile
+    
+    //Attributi per rapprensatare un proiettile
+    private Game game;
     private int x;
     private int y;
     private int larghezza;
     private int altezza;
     BufferedImage imgProiettile;
     private boolean attivo;
-    private Game game;
-    private int velocitaProiettile;
-    
+    private final float velocita = 1.5f;
     
     //Costruttori
     public Proiettile() {
         
     }
     
-    public Proiettile(BufferedImage imgProiettile, int larghezza, int altezza, int x, int y, int velocitaProiettile, Game game) {
+    public Proiettile(BufferedImage imgProiettile, int x, int y, int larghezza, int altezza, Game game) {
+        this.imgProiettile = imgProiettile;
         this.x = x;
-        this.y = y;
-        this.velocitaProiettile = velocitaProiettile;
         this.larghezza = larghezza;
         this.altezza = altezza;
-        this.imgProiettile = imgProiettile;
-        attivo = true;
+        this.y = y;
         this.game = game;
-        this.start();
-    }
+        
+        this.start(); //quando viene aggiunto nell'arrayList deve partire
+    } 
     
     
     //Metodi
-    private void aggiorna() {
-        this.setY(this.getY() + this.velocitaProiettile);
+    public Rectangle getBordi() {
+        return new Rectangle(this.x, this.y, this.larghezza, this.altezza);
     }
     
+    private void aggiorna() {
+        this.y -= this.velocita;
+        
+        if(this.y + this.altezza < 0) { 
+            this.setAttivo(false);
+            Game.munizioniProiettili.remove(this);
+        }
+    }
+   
     @Override
     public void run() {
-        this.attivo = true;
+        this.setAttivo(true);
         
-        while(attivo) {
+        while(isAttivo()) {
             this.aggiorna();
             
             try {
                 Thread.sleep(100);
-            } catch(InterruptedException ex) {
-                Logger.getLogger(Protagonista.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Proiettile.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
         }
     }
     
     public void disegna(Graphics graphics) {
-        graphics.drawImage(this.imgProiettile, this.getX(), this.getY(), this.getLarghezza(), this.getAltezza(), this.game);
+        graphics.drawImage(this.imgProiettile, this.x, this.y, this.larghezza, this.altezza, this.game);
     }
-    
-    public Rectangle getBordi() {
-        return new Rectangle(this.x, this.y, this.larghezza, this.altezza); //A Rectangle specifies an area in a coordinate space that is enclosed by the Rectangle object's upper-left point (x,y) in the coordinate space, its width, and its height.
-    }
-    
     
     //Getters and Setters
-     public int getX() {
+    public int getX() {
         return x;
     }
 
@@ -109,5 +111,11 @@ public class Proiettile extends Thread {
         this.altezza = altezza;
     }
     
-    
+    public boolean isAttivo() {
+        return attivo;
+    }
+
+    public void setAttivo(boolean attivo) {
+        this.attivo = attivo;
+    }
 }

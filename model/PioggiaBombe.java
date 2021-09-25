@@ -47,7 +47,7 @@ public class PioggiaBombe extends Thread {
         this.piove = true;
         
         while(piove) {
-            this.quantita = this.random.nextInt(6);
+            this.quantita = this.random.nextInt(2);
             for(int i = 0; i < this.quantita; i++) {
                 this.getPioggia().add(new Bomba(this.imgBomba, 80, 80, random.nextInt(this.game.getLarghezza()), -50, random.nextInt(this.maxVerlocita) + 2, game));
             }
